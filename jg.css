@@ -1,0 +1,57 @@
+/* jg.css — Jagli design tokens. Neutral starter set (2026-10-16); swap brand values here only.
+   Layers: primitives (--jg-p-*) → semantic tokens (--jg-*) → app aliases. Apps never use primitives or hex. */
+@layer jg.tokens, jg.base;
+
+@layer jg.tokens {
+  :root {
+    color-scheme: light dark;
+
+    /* primitives — graphite neutrals, teal accent */
+    --jg-p-g0: #0d0f11; --jg-p-g1: #121417; --jg-p-g2: #1a1d21; --jg-p-g3: #22262b; --jg-p-g4: #2c3137;
+    --jg-p-g5: #3d434a; --jg-p-g6: #737a82; --jg-p-g7: #a0a6ad; --jg-p-g8: #eceef0;
+    --jg-p-l0: #ffffff; --jg-p-l1: #f5f6f7; --jg-p-l2: #eef0f2; --jg-p-l3: #e6e9ec; --jg-p-l4: #d9dde1;
+    --jg-p-l5: #b9c0c7; --jg-p-l6: #5f666d; --jg-p-l7: #4a5157; --jg-p-l8: #16191c;
+    --jg-p-teal-300: #6fd8c3; --jg-p-teal-400: #3ec1a8; --jg-p-teal-700: #0f7d6b; --jg-p-teal-800: #0b6457;
+    --jg-p-teal-950: #08201b; --jg-p-teal-900d: #16302b; --jg-p-teal-50: #dff3ef;
+
+    /* semantic — light-dark(light, dark) */
+    --jg-bg:            light-dark(var(--jg-p-l1), var(--jg-p-g1));
+    --jg-surface:       light-dark(var(--jg-p-l0), var(--jg-p-g2));
+    --jg-surface-2:     light-dark(var(--jg-p-l2), var(--jg-p-g3));
+    --jg-sunken:        light-dark(var(--jg-p-l3), var(--jg-p-g0));
+    --jg-line:          light-dark(var(--jg-p-l4), var(--jg-p-g4));
+    --jg-line-strong:   light-dark(var(--jg-p-l5), var(--jg-p-g5));
+    --jg-text:          light-dark(var(--jg-p-l8), var(--jg-p-g8));
+    --jg-text-muted:    light-dark(var(--jg-p-l7), var(--jg-p-g7));
+    --jg-text-dim:      light-dark(var(--jg-p-l6), var(--jg-p-g6));
+    --jg-accent:        light-dark(var(--jg-p-teal-700), var(--jg-p-teal-400));
+    --jg-accent-strong: light-dark(var(--jg-p-teal-800), var(--jg-p-teal-300));
+    --jg-accent-soft:   light-dark(var(--jg-p-teal-50), var(--jg-p-teal-900d));
+    --jg-on-accent:     light-dark(#ffffff, var(--jg-p-teal-950));
+    --jg-danger:        light-dark(#c4372d, #ef6b61);
+    --jg-ok:            light-dark(#217a45, #5cc98a);
+    --jg-info:          light-dark(#1f63c7, #6aa8ff);
+    --jg-warn:          light-dark(#8a5f00, #e8b04a);
+    --jg-scrim:         light-dark(#16191c66, #000000a6);
+    --jg-focus-ring:    var(--jg-accent);
+
+    /* type, shape, motion */
+    --jg-font: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --jg-font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+    --jg-radius-s: 6px; --jg-radius-m: 8px; --jg-radius-l: 12px;
+    --jg-space-1: 4px; --jg-space-2: 8px; --jg-space-3: 12px; --jg-space-4: 16px; --jg-space-6: 24px;
+    --jg-shadow: 0 8px 30px light-dark(#16191c26, #000000a6);
+    --jg-dur: 160ms; --jg-ease: cubic-bezier(.2, .7, .2, 1);
+  }
+  /* explicit overrides for a theme toggle: <html data-theme="light|dark"> */
+  :root[data-theme="light"] { color-scheme: light }
+  :root[data-theme="dark"]  { color-scheme: dark }
+}
+
+@layer jg.base {
+  :focus-visible { outline: 2px solid var(--jg-focus-ring); outline-offset: 2px }
+  ::selection { background: var(--jg-accent-soft) }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important }
+  }
+}
