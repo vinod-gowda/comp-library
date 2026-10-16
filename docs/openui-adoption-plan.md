@@ -42,6 +42,27 @@ that have no LLM in the loop. Both cost a lot for little gain.
 Hand-built screens use the same tokens with plain HTML and native elements (`<dialog>`, `popover`,
 `<select>`). They look the same as OpenUI screens without depending on React.
 
+## 2a. Hosted-service dependency and audit (source read 2026-10-16)
+**Verdict: usable with no Thesys account, no Thesys API and no Claude app**, provided the setup below is followed.
+The packages below are a library. The model is whichever LLM you call: Claude via fal, a local llama, or similar.
+The audit followed `processes/third-party-code-audit-before-install.md`. Source: the official
+`thesysdev` org, MIT, active history.
+
+| Package | Reads | Stores | Phones home |
+|---|---|---|---|
+| `lang-core` 1.0.1 (1 dep) | env vars, git origin (for a hash) | nothing | **Yes, at install.** The postinstall script sends a PostHog event with SDK/Node version, OS, CI and Docker flags and hashed project ID. It says there is no PII. **Disable with `OPENUI_TELEMETRY_DISABLED=1` or `DO_NOT_TRACK=1`.** Runtime telemetry (10% sampled, server-side only, hashes and counts) is **opt-in** (`OPENUI_RUNTIME_TELEMETRY_ENABLED=1`). Leave it off. |
+| `react-lang` 1.0.1 (3 deps) | the model's streamed text | nothing | no |
+| `react-headless` 0.18.1 | chat state | nothing | Only if you use its `openuiCloud` helper, which talks to `api.thesys.dev` with a token. **Don't use it.** Point streaming at your own endpoint. |
+| `react-ui` 0.18.1 (34 deps: Radix, floating-ui…) | nothing | nothing | no. URLs found are story/demo images only. |
+| `observability-cloud` | events | — | Sends to `ingest.thesys.dev`, needs a Thesys key. **Don't install it.** |
+
+Install rules:
+- Set `DO_NOT_TRACK=1` in the shell profile and in CI.
+- Install with `--ignore-scripts`, or vet `postinstall.cjs` on every upgrade.
+- Pin exact versions and verify lockfile integrity hashes.
+- Never install `observability-cloud` or the C1 SDK.
+- Store a scan of the installed tree in the vault audit doc (telemetry regex, then read every hit).
+
 ## 3. Layering the studio's own theme
 `ThemeProvider` takes `mode` (`light`/`dark`), a `theme` of partial overrides for light mode, `darkTheme`
 (dark overrides; if omitted, the light overrides apply to both), and `cssSelector` (default `body`). It
@@ -98,7 +119,7 @@ Motion is not themed in OpenUI, so wrap it in `prefers-reduced-motion` in our la
 ## 5. Phased rollout
 | Phase | What | Why this order | Done when |
 |---|---|---|---|
-| 0. Audit | Run `processes/third-party-code-audit-before-install.md` on `@openuidev/*` (deps, postinstall, network calls, observability-cloud off by default?). Pin exact versions. | Third-party code is trusted only after an audit. 0.x means pinning. | Audit entry in the vault, pinned versions noted |
+| 0. Audit | Initial audit done (§2a). Repeat it on the installed tree; DO_NOT_TRACK, --ignore-scripts, pin exact versions. | Third-party code is trusted only after an audit. 0.x means pinning. | Audit entry in the vault, pinned versions noted |
 | 1. Tokens | In `comp-library`: primitives, semantic light and dark tokens, the pairing table, the contrast test, and two adapters (OpenUI theme object and plain CSS) | Everything else depends on them, and they work with no framework | Contrast test passes. One demo page each in plain HTML and OpenUI looks the same in both modes |
 | 2. Core primitives | A small set: Button, Input, Select, Tabs, Modal, Callout, Table, Card. OpenUI for React, a native-HTML recipe for plain-JS. Storybook and axe. | Most screens use these. Prove the theme on them before scaling | Each passes the checklist and axe in both modes |
 | 3. Patterns | Forms, data tables, empty, loading and error states, and the generative chat or answer pane | Patterns are where consistency shows up | A pattern page with usage rules |
