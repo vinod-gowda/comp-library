@@ -1,8 +1,8 @@
 # comp-library
 
-Component library for all Jagli projects.
+Design system for all Jagli projects: plain CSS and HTML, no React, no build step.
 
-- **Base layer:** [Thesys OpenUI](https://github.com/thesysdev/openui) (`@openuidev/react-ui`, Radix-based), for UI that AI renders.
-- **Brand layer:** framework-free design tokens (CSS custom properties) used by every project, mapped into OpenUI's `ThemeProvider`.
+- Brand tokens (`--jg-*` CSS custom properties) with light and dark modes and contrast-checked colour pairings
+- Native-element components (`<dialog>`, `popover`, `<details>`, `<select>`), plus a tiny vanilla-JS helper for tabs
 
-Start with [docs/openui-adoption-plan.md](docs/openui-adoption-plan.md).
+Start with [docs/design-system-plan.md](docs/design-system-plan.md). The earlier OpenUI plan is superseded and kept for the record.

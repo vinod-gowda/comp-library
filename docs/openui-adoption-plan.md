@@ -1,5 +1,7 @@
 # OpenUI as the base UI layer: analysis and rollout plan (2026-10-16)
 
+> **SUPERSEDED 2026-10-16** by `plans/design-system-no-react-2026-10.md`. The user decided on no React. Kept for the record and for the audit in §2a.
+
 **Ask:** adopt Thesys **OpenUI** (generative-UI React library, MIT, `github.com/thesysdev/openui`) as the
 base UI layer for all projects, with the studio's own colours, pairings and fonts layered on top.
 **Status:** analysis only. No project code changed.
